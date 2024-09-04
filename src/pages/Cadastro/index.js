@@ -69,7 +69,7 @@ export default function Cadastro({navigation}) {
       Alert.alert('Atenção!', 'Usuário salvo com sucesso!')
       adicionarUsuario(usuario);
 
-      // limpart os campos do formulár
+      // limpar os campos do formulário
       setUsuario({nome: '', email: '', senha: ''});
     }
     };

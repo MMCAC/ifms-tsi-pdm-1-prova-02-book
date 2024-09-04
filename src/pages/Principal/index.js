@@ -1,44 +1,48 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { useSQLiteContext } from 'expo-sqlite';
 
 import {styles} from "./style"
 
 import TopLogo from '../../components/TopLogo';
 import { TextInput } from 'react-native';
 
-// export const loginUser = (email, password, callback) => {
-//   db.transaction(tx => {
-//     tx.executeSql(
-//       'SELECT * FROM usuario WHERE email = ? AND password = ?',
-//       [email, password],
-//       (_, { rows }) => {
-//         if (rows.length > 0) {
-//           callback(null, rows._array[0]);
-//         } else {
-//           callback('Usuário ou senha incorretos');
-//         }
-//       }
-//     );
-//   });
-// };
+const db = useSQLiteContext();
 
+const loginUser = (email, senha, callback) => {
+
+  db.transaction(tx => {
+    tx.executeSql(
+      'SELECT * FROM usuario WHERE email = ? AND senha = ?',
+      [email, senha],
+      (_, { rows }) => {
+        if (rows.length > 0) {
+          callback(null, rows._array[0]);
+        } else {
+          callback('Usuário ou senha incorretos');
+        }
+      }
+    );
+  });
+};
 
 export default function Principal({ navigation }) {
 
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [usuario, setUsuario] = useState({id: 0, email: '', senha: ''})
 
 
-  // const handleLogin = () => {
-  //   loginUser(email, password, (error, user) => {
-  //     if (error) {
-  //       Alert.alert('Erro', error);
-  //     } else {
-  //       // Redireciona para as telas do Bottom Tabs após o login
-  //       navigation.replace('HomeTabs', { user });
-  //     }
-  //   });
-  // };
+  const handleLogin = () => {
+    const { email, senha } = usuario;
+    loginUser(email, senha, (error, user) => {
+      if (error) {
+        Alert.alert('Erro', error);
+      } else {
+        // Redireciona para as telas do Bottom Tabs após o login
+        navigation.replace('HomeTabs', { user });
+      }
+    });
+  };
+
 
   return (
     <KeyboardAvoidingView
@@ -68,15 +72,15 @@ export default function Principal({ navigation }) {
                     </View>
                         <TextInput
                             style={styles.input}
-                            onChangeText={setEmail}
-                            value={email}
+                            onChangeText={(text) => setUsuario({...usuario, email: text})}
+                            value={usuario.email}
                             placeholder="E-mail"
                         />
 
                         <TextInput
                             style={styles.input}
-                            onChangeText={setSenha}
-                            value={senha}
+                            onChangeText={(text) => setUsuario({...usuario, senha: text})}
+                            value={usuario.senha}
                             placeholder="Senha"
                             secureTextEntry
                         />
@@ -85,11 +89,13 @@ export default function Principal({ navigation }) {
                 </View>
 
                 <View style={styles.login}>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Home')}>
+                    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
                         <Text style={styles.loginButtonText}>ENTRAR</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+
+            {/* onPress={() => navigation.navigate('Home')}> */}
         
 
             <View style={styles.singUpCard}>
