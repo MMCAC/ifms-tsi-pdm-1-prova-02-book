@@ -6,12 +6,39 @@ import {styles} from "./style"
 import TopLogo from '../../components/TopLogo';
 import { TextInput } from 'react-native';
 
+// export const loginUser = (email, password, callback) => {
+//   db.transaction(tx => {
+//     tx.executeSql(
+//       'SELECT * FROM usuario WHERE email = ? AND password = ?',
+//       [email, password],
+//       (_, { rows }) => {
+//         if (rows.length > 0) {
+//           callback(null, rows._array[0]);
+//         } else {
+//           callback('Usuário ou senha incorretos');
+//         }
+//       }
+//     );
+//   });
+// };
 
 
 export default function Principal({ navigation }) {
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+
+
+  // const handleLogin = () => {
+  //   loginUser(email, password, (error, user) => {
+  //     if (error) {
+  //       Alert.alert('Erro', error);
+  //     } else {
+  //       // Redireciona para as telas do Bottom Tabs após o login
+  //       navigation.replace('HomeTabs', { user });
+  //     }
+  //   });
+  // };
 
   return (
     <KeyboardAvoidingView
@@ -51,6 +78,7 @@ export default function Principal({ navigation }) {
                             onChangeText={setSenha}
                             value={senha}
                             placeholder="Senha"
+                            secureTextEntry
                         />
                 <View>
                     

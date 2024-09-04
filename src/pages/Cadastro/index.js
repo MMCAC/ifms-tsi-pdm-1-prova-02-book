@@ -1,66 +1,93 @@
 import * as React from 'react';
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import { Text, View, Alert,  StyleSheet, ScrollView, TextInput, TouchableOpacity,KeyboardAvoidingView, Platform  } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
-
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-const Stack = createNativeStackNavigator();
+import { useSQLiteContext } from 'expo-sqlite';
 
 import {styles} from "./style.js"
 
 import TopLogo from '../../components/TopLogo';
 
 const UsuarioFormulario = ({usuario, setUsuario, onSave}) => {
+    return(
+            <View style={styles.loginCard}>
+                    <View>
+                        <Text style={styles.loginText}>INFORME SEUS DADOS</Text>
+                    </View>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => setUsuario({...usuario, nome: text})}
+                            value={usuario.nome}
+                            placeholder="Informe o seu nome"
+                        />
 
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => setUsuario({...usuario, email: text})}
+                            value={usuario.email}
+                            placeholder="Informe o seu email"
+                        />
+
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => setUsuario({...usuario, senha: text})}
+                            value={usuario.senha}
+                            placeholder="Informe a sua senha"
+                        />
+                    <View>
+                    
+                </View>
+
+                <View style={styles.login}>
+                    <TouchableOpacity style={styles.loginButton} onPress={onSave}>
+                        <Text style={styles.loginButtonText}>CADASTRAR</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+    )
 }
 
-
-
 export default function Cadastro({navigation}) {
+    const db = useSQLiteContext();
+    const [usuarios, setUsuarios] = useState([]);
+    const [usuario, setUsuario] = useState({ id: 0, nome: '', email: '', senha: '' });
 
-    const [email, setEmail] = useState('');
-    const [emailConf, setEmailConf] = useState('');
-    const [senha, setSenha] = useState('');
-    const [senhaConf, setSenhaConf] = useState('');
-    const [nome, setNome] = useState('');
+    const getUsuarios = async () => {
+    try {
+      // consultar a tabela
+      const todosRegistros = await db.getAllAsync('SELECT * FROM usuario');
+      // armazenar os dados da tabela no hook
+      setUsuarios(todosRegistros);
+    } catch (error) {
+      console.log('Erro ao ler os dados dos usuários: ', error)
+    }
+    };
+    
+   const confirmarSalvar = () => {
+    if (usuario.nome.length === 0 || usuario.email.length === 0 || usuario.senha === 0) {
+      Alert.alert('Atenção!', 'Por favor, preencha todos os dados!');
+    } else {
+      Alert.alert('Atenção!', 'Usuário salvo com sucesso!')
+      adicionarUsuario(usuario);
 
+      // limpart os campos do formulár
+      setUsuario({nome: '', email: '', senha: ''});
+    }
+    };
 
-    // const db = useSQLiteContext();
-    // const [usuarios, setUsuarios] = useState([]);
+    const adicionarUsuario = async (novoUsuario) => {
+    try {
+      // montar a query de inserção
+      const query = await db.prepareAsync('INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)')
+      await query.executeAsync([novoUsuario.nome, novoUsuario.email, novoUsuario.senha]);
+      await getUsuarios();
+    } catch (error) {
+      console.log('Erro ao adicionar o usuário', error)
+    }
+    }
 
-    // // CREATE / INSERT
-    // const confirmarSalvar = (nome,  email, senha) => {
-
-    //     const usuario = {
-    //         nome,
-    //         email,
-    //         senha
-    //     };
-    //     if (usuario.nome.length === 0 || usuario.email.length === 0 || usuario.senha.length === 0) {
-    //     Alert.alert('Atenção!', 'Por favor, preencha todos os dados!');
-    //     } else {
-    //     Alert.alert('Atenção!', 'Usuário salvo com sucesso!')
-    //     adicionarUsuario(usuario);
-
-    //     // limpart os campos do formulár
-
-    //     }
-    // }
-
-    // // função para adicionar um usuário
-    // const adicionarUsuario = async (novoUsuario) => {
-    //     try {
-    //     // montar a query de inserção
-    //     const query = await db.prepareAsync('INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)')
-    //     await query.executeAsync([novoUsuario.nome, novoUsuario.email, novoUsuario.telefone]);
-    //     await getUsuarios();
-    //     } catch (error) {
-    //     console.log('Erro ao adicionar o usuário', error)
-    //     }
-    // }
-
+    useEffect(() => {
+        getUsuarios();
+  }, []);
 
     return(
     <KeyboardAvoidingView
@@ -77,42 +104,7 @@ export default function Cadastro({navigation}) {
                     </TouchableOpacity>
                 </View>
 
-
-                <View style={styles.loginCard}>
-                    <View>
-                        <Text style={styles.loginText}>INFORME SEUS DADOS</Text>
-                    </View>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={setNome}
-                            value={nome}
-                            placeholder="Informe o seu nome"
-                        />
-
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={setEmail}
-                            value={email}
-                            placeholder="Informe o seu email"
-                        />
-
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={setSenha}
-                            value={senha}
-                            placeholder="Informe a sua senha"
-                        />
-   
-                <View>
-                    
-                </View>
-
-                <View style={styles.login}>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => confirmarSalvar(nome, email, senha)}>
-                        <Text style={styles.loginButtonText}>CADASTRAR</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+                <UsuarioFormulario usuario={usuario} setUsuario={setUsuario} onSave={confirmarSalvar}/>
             </View>
         </ScrollView>
     </KeyboardAvoidingView>

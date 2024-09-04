@@ -51,7 +51,7 @@ function HomeScreen() {
       setLivros(todosRegistros);
       console.log(todosRegistros)
     } catch (error) {
-      console.log('Erro ao ler os dados dos usuários: ', error)
+      console.log('Erro ao ler os dados dos livros: ', error)
     }
   };
 
@@ -65,7 +65,7 @@ function HomeScreen() {
       // limpart os campos do formulár
       setLivro({titulo: '', descricao: ''});
     }
-  }
+  };
 
   const adicionarLivro = async (novoLivro) => {
     try {
