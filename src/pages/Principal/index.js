@@ -1,44 +1,38 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { useSQLiteContext } from 'expo-sqlite';
 import {styles} from "./style"
 
 import TopLogo from '../../components/TopLogo';
 import { TextInput } from 'react-native';
-
-// export const loginUser = (email, password, callback) => {
-//   db.transaction(tx => {
-//     tx.executeSql(
-//       'SELECT * FROM usuario WHERE email = ? AND password = ?',
-//       [email, password],
-//       (_, { rows }) => {
-//         if (rows.length > 0) {
-//           callback(null, rows._array[0]);
-//         } else {
-//           callback('Usuário ou senha incorretos');
-//         }
-//       }
-//     );
-//   });
-// };
 
 
 export default function Principal({ navigation }) {
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const db = useSQLiteContext(); // Pega o contexto do banco de dados
 
 
-  // const handleLogin = () => {
-  //   loginUser(email, password, (error, user) => {
-  //     if (error) {
-  //       Alert.alert('Erro', error);
-  //     } else {
-  //       // Redireciona para as telas do Bottom Tabs após o login
-  //       navigation.replace('HomeTabs', { user });
-  //     }
-  //   });
-  // };
+  // Função chamada ao pressionar o botão de login
+const handleLogin = async () => {
+    try {
+      const result = await db.getAllAsync(
+        'SELECT * FROM usuario WHERE email = ? AND senha = ?',
+        [email, senha]
+      );
+
+      if (result.length > 0) {
+        // Redireciona para as telas do Bottom Tabs após o login
+        navigation.replace('HomeScreen', { user: result[0] });
+      } else {
+        Alert.alert('Erro', 'Usuário ou senha incorretos');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Erro ao fazer login');
+      console.error('Erro no login:', error);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -85,7 +79,7 @@ export default function Principal({ navigation }) {
                 </View>
 
                 <View style={styles.login}>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Home')}>
+                    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
                         <Text style={styles.loginButtonText}>ENTRAR</Text>
                     </TouchableOpacity>
                 </View>
@@ -106,3 +100,33 @@ export default function Principal({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
+
+
+
+  // const handleLogin = () => {
+  //   loginUser(email, password, (error, user) => {
+  //     if (error) {
+  //       Alert.alert('Erro', error);
+  //     } else {
+  //       // Redireciona para as telas do Bottom Tabs após o login
+  //       navigation.replace('HomeTabs', { user });
+  //     }
+  //   });
+  // };
+
+  
+// export const loginUser = (email, password, callback) => {
+//   db.transaction(tx => {
+//     tx.executeSql(
+//       'SELECT * FROM usuario WHERE email = ? AND password = ?',
+//       [email, password],
+//       (_, { rows }) => {
+//         if (rows.length > 0) {
+//           callback(null, rows._array[0]);
+//         } else {
+//           callback('Usuário ou senha incorretos');
+//         }
+//       }
+//     );
+//   });
+// };
