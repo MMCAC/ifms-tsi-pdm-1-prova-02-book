@@ -1,10 +1,24 @@
-import { View, Text, TouchableOpacity, ScrollView, Image  } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import {styles} from "./style"
 
+import Principal from "../Principal"
+
 import TopLogo from '../../components/TopLogo';
+import { useState } from 'react';
+
+
 
 export default function User({navigation}) {
+  const [idade, setIdade] = useState('');
+  const [sexo, setSexo] = useState('');
+  const [bio, setBio] =useState('')
+
   return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={1}
+    >
     <ScrollView>
         <View style={styles.container}>
             <View style={styles.topSection}>
@@ -17,18 +31,53 @@ export default function User({navigation}) {
                 </View>
 
                 <View style={styles.infoCard}>
-                    <Text>Nome</Text>
+                    <Text style={styles.tituloDados}>DADOS PESSOAIS</Text>
 
-                    <View>
-                        <Text>Idade</Text>
-                        <Text>Sexo</Text>
-                    </View>
+                    <View style={styles.infoName}><Text style={styles.infoText}>Nome</Text></View>
                     
+
+                    <View style={styles.insideInfo}>
+                        <View style={styles.info}>
+                            <TextInput
+                                style={styles.inputD}
+                                placeholder="Idade"
+                                value={idade}
+                                onChangeText= {(text) => setIdade(text)}
+                                keyboardType='numeric'
+                                maxLength={2}
+                            />
+                        </View>
+
+                        <View style={styles.info}>
+                            <TextInput
+                                style={styles.inputD}
+                                placeholder="Sexo"
+                                value={sexo}
+                                onChangeText= {(text) => setSexo(text)}
+                                maxLength={6}
+                            /></View>                                      
+                    </View>
+
+                        <View style={styles.bioView}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Escreva a sua bio"
+                                value={bio}
+                                onChangeText= {(text) => setBio(text)}
+                            />
+                        </View>
+                </View>
+
+                <View style={styles.returnCard}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Principal')}>
+                        <Text style={styles.returnCardText}>&lt;- Sair</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
             
         </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

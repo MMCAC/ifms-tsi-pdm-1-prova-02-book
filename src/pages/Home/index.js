@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -116,11 +117,41 @@ const Tab = createBottomTabNavigator();
 export default function Home() {
   return (
     <NavigationContainer independent={true}>
-      <Tab.Navigator initialRouteName='Home'>
-        <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
-        <Tab.Screen name="ApiSearch" component={ApiSearch} options={{ headerShown: false }}/>
-        <Tab.Screen name="BookMark" component={BookMark} options={{ headerShown: false }}/>
-        <Tab.Screen name="User" component={User} options={{ headerShown: false }}/>
+      <Tab.Navigator initialRouteName='Home' tabBarOptions={{
+          showLabel: false,
+          activeTintColor: '#fff',
+          inactiveTintColor: '#FF928B',
+          activeBackgroundColor: '#d31212',
+          inactiveBackgroundColor: '#820B0B',
+        }}>
+        <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="home-outline"
+                color={color}
+                size={size}
+              />
+            ), }}/>
+        <Tab.Screen name="ApiSearch" component={ApiSearch} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="magnify"
+                color={color}
+                size={size}
+              />
+            ), }}/>
+        <Tab.Screen name="BookMark" component={BookMark} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="book"
+                color={color}
+                size={size}
+              />
+            ), }}/>
+        <Tab.Screen name="User" component={User} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="account"
+                color={color}
+                size={size}
+              />
+            ), }}/>
       </Tab.Navigator>
     </NavigationContainer>
   );

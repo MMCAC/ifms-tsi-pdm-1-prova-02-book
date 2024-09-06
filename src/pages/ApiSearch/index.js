@@ -17,7 +17,7 @@ export default function ApiSearch() {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      setBooks(data.docs || []);
+      setBooks(data.docs.slice(0, 10) || []);
     } catch (error) {
       console.error('Erro ao buscar livros:', error);
     } finally {

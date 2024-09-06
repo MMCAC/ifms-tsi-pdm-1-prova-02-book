@@ -24,7 +24,7 @@ const handleLogin = async () => {
 
       if (result.length > 0) {
         // Redireciona para as telas do Bottom Tabs após o login
-        navigation.replace('HomeScreen', { user: result[0] });
+        navigation.navigate('Home', { user: result[0] });
       } else {
         Alert.alert('Erro', 'Usuário ou senha incorretos');
       }
@@ -79,12 +79,13 @@ const handleLogin = async () => {
                 </View>
 
                 <View style={styles.login}>
-                    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                    <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Home')}>
                         <Text style={styles.loginButtonText}>ENTRAR</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-        
+
+            {/* onPress={handleLogin} */}
 
             <View style={styles.singUpCard}>
                 <TouchableOpacity onPress={() => navigation.navigate('Cadastro')} style={styles.singUpButton}>
@@ -100,33 +101,3 @@ const handleLogin = async () => {
     </KeyboardAvoidingView>
   );
 }
-
-
-
-  // const handleLogin = () => {
-  //   loginUser(email, password, (error, user) => {
-  //     if (error) {
-  //       Alert.alert('Erro', error);
-  //     } else {
-  //       // Redireciona para as telas do Bottom Tabs após o login
-  //       navigation.replace('HomeTabs', { user });
-  //     }
-  //   });
-  // };
-
-  
-// export const loginUser = (email, password, callback) => {
-//   db.transaction(tx => {
-//     tx.executeSql(
-//       'SELECT * FROM usuario WHERE email = ? AND password = ?',
-//       [email, password],
-//       (_, { rows }) => {
-//         if (rows.length > 0) {
-//           callback(null, rows._array[0]);
-//         } else {
-//           callback('Usuário ou senha incorretos');
-//         }
-//       }
-//     );
-//   });
-// };
