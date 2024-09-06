@@ -20,7 +20,7 @@ topSection: {
     backgroundColor: "#eee",
     widht: "90%",
     paddingHorizontal: "17%",
-    paddingVertical: "15%",
+    paddingVertical: "13%",
     borderRadius: 50,
     shadowColor: '#000',
     shadowOffset: { width: 1, height: 2 },
