@@ -28,15 +28,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: "11%",
     borderRadius: 50,
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
+    boxShadow: '1px 2px 2px rgba(0, 0, 0, 0.2)',
     marginBottom: 30,
     alignItems: "center",
-
-    // Sombra para Android
-    elevation: 5,
   },
     loginText : {
     fontSize: 30,

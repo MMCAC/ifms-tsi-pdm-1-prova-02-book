@@ -1,17 +1,18 @@
 import { View, Text, TouchableOpacity, ScrollView, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import {styles} from "./style"
 
-import Principal from "../Principal"
-
 import TopLogo from '../../components/TopLogo';
 import { useState } from 'react';
 
 
 
-export default function User({navigation}) {
+export default function User({route}) {
   const [idade, setIdade] = useState('');
   const [sexo, setSexo] = useState('');
   const [bio, setBio] =useState('')
+
+  const { user } = route.params || {};
+  const userNome = user?.nome
 
   return (
     <KeyboardAvoidingView
@@ -33,7 +34,7 @@ export default function User({navigation}) {
                 <View style={styles.infoCard}>
                     <Text style={styles.tituloDados}>DADOS PESSOAIS</Text>
 
-                    <View style={styles.infoName}><Text style={styles.infoText}>Nome</Text></View>
+                    <View style={styles.infoName}><Text style={styles.infoText}>{userNome}</Text></View>
                     
 
                     <View style={styles.insideInfo}>

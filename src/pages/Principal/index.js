@@ -79,7 +79,7 @@ const handleLogin = async () => {
                 </View>
 
                 <View style={styles.login}>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Home')}>
+                    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
                         <Text style={styles.loginButtonText}>ENTRAR</Text>
                     </TouchableOpacity>
                 </View>

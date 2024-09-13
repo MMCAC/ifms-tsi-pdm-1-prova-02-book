@@ -22,15 +22,9 @@ topSection: {
     paddingHorizontal: "17%",
     paddingVertical: "13%",
     borderRadius: 50,
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
+    boxShadow: '1px 2px 2px rgba(0, 0, 0, 0.2)',
     marginBottom: 30,
     marginTop: 10,
-
-    // Sombra para Android
-    elevation: 5,
   },
   imagem: {
     borderRadius: 100,

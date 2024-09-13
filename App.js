@@ -8,8 +8,10 @@ import Home from './src/pages/Home';
 import ApiSearch from './src/pages/ApiSearch';
 import BookMark from './src/pages/BookMark';
 import User from './src/pages/User/Index';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Stack = createNativeStackNavigator();
+const Tabs = createBottomTabNavigator();
 
 const iniciarBancoDeDados = async (db) => {
   try {

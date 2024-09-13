@@ -13,6 +13,7 @@ import {styles} from "./style";
 
 import TopLogo from '../../components/TopLogo';
 
+
 const LivroFormulario = ({livro, setLivro, onSave}) => {
 
     return (
@@ -38,16 +39,19 @@ const LivroFormulario = ({livro, setLivro, onSave}) => {
   );
 }
 
-function HomeScreen() {
+function HomeScreen({ route }) {
 
   const db = useSQLiteContext();
   const [livros, setLivros] = useState([]);
   const [livro, setLivro] = useState({ id: 0, titulo: '' ,  descricao: ''});
 
+  const { user } = route.params || {};
+  const userId = user?.id
+
   const getLivros = async () => {
     try {
       // consultar a tabela
-      const todosRegistros = await db.getAllAsync('SELECT * FROM livro');
+      const todosRegistros = await db.getAllAsync('SELECT * FROM livro WHERE usuario_id = ?', [userId]);
       // armazenar os dados da tabela no hook
       setLivros(todosRegistros);
       console.log(todosRegistros)
@@ -71,19 +75,23 @@ function HomeScreen() {
   const adicionarLivro = async (novoLivro) => {
     try {
       // montar a query de inserção
-      const query = await db.prepareAsync('INSERT INTO livro (titulo, descricao) VALUES (?, ?)')
-      await query.executeAsync([novoLivro.titulo, novoLivro.descricao]);
+      const query = await db.prepareAsync('INSERT INTO livro (titulo, descricao, usuario_id) VALUES (?, ?, ?)')
+      await query.executeAsync([novoLivro.titulo, novoLivro.descricao, userId]);
       await getLivros();
       console.log("Livro adicionado");
+      getLivros();
     } catch (error) {
       console.log('Erro ao adicionar o livro', error)
+      getLivros();
     }
   }
 
   // obter todos os livros ao abrir o aplicativo
   useEffect(() => {
-    getLivros();
-  }, []);
+    if (userId) {
+      getLivros();
+    }
+  }, [userId]);
 
   return (
     <KeyboardAvoidingView
@@ -114,7 +122,10 @@ function HomeScreen() {
 
 const Tab = createBottomTabNavigator();
 
-export default function Home() {
+export default function Home({ route }) {
+
+  const user = route.params?.user || {};
+
   return (
     <NavigationContainer independent={true}>
       <Tab.Navigator initialRouteName='Home' tabBarOptions={{
@@ -124,7 +135,7 @@ export default function Home() {
           activeBackgroundColor: '#d31212',
           inactiveBackgroundColor: '#820B0B',
         }}>
-        <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
+        <Tab.Screen name="Home" initialParams={{ user }} component={HomeScreen} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="home-outline"
                 color={color}
@@ -145,7 +156,7 @@ export default function Home() {
                 size={size}
               />
             ), }}/>
-        <Tab.Screen name="User" component={User} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
+        <Tab.Screen name="User" initialParams={{ user }} component={User} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="account"
                 color={color}

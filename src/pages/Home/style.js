@@ -12,15 +12,9 @@ titleCard: {
     paddingHorizontal: "17%",
     paddingVertical: "6%",
     borderRadius: 50,
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
+    boxShadow: '1px 2px 2px rgba(0, 0, 0, 0.2)',
     marginBottom: 30,
     marginTop: 10,
-
-    // Sombra para Android
-    elevation: 5,
   },
   titleCardInside: {
     flexDirection: "row",
@@ -49,15 +43,9 @@ formularioCard: {
     paddingHorizontal: 30,
     paddingVertical: "10%",
     borderRadius: 50,
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
+    boxShadow: '1px 2px 2px rgba(0, 0, 0, 0.2)',
     marginBottom: 30,
     alignItems: "center",
-
-    // Sombra para Android
-    elevation: 5,
   },
 formularioText : {
     fontSize: 30,
